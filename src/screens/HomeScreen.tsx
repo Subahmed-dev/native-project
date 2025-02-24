@@ -6,7 +6,7 @@ export default function HomeScreen({ navigation }) {
   const handleLogout = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: 'SignIn' }],
+      routes: [{ name: 'SignIn' }],             
     });
   };
 
@@ -19,7 +19,7 @@ export default function HomeScreen({ navigation }) {
       />
       <Text style={styles.heading}>Welcome to MyApp</Text>
       <Text style={styles.tagline}>Your tagline or introduction goes here!</Text>
-
+ 
       <TouchableOpacity 
         style={styles.button} 
         onPress={() => alert('Continue clicked!')}
@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }) {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => navigation.navigate('Next')}
+        onPress={() => navigation.navigate('Next')} 
       >
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
@@ -40,7 +40,6 @@ export default function HomeScreen({ navigation }) {
       >
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-
       <StatusBar />
     </View>
   );

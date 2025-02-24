@@ -1,35 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { NetworkInfo } from 'react-native-network-info';
 
 export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [serverIp, setServerIp] = useState('172.20.9.228');
+
+  useEffect(() => {
+    NetworkInfo.getIPAddress().then(ipAddress => {
+      console.log('Device Local IP:', ipAddress);
+      setServerIp( "172.20.9.228");
+    });
+  }, [serverIp]);
 
   const handleSignIn = async () => {
-    if (email === '' || password === '') {
-      Alert.alert('Error', 'Please fill in both fields.');
+    if (!serverIp) {
+      Alert.alert('Error', 'Unable to fetch server IP.');
       return;
     }
 
     try {
-      const response = await fetch('http://172.20.10.208:3000/login', {
+      const response = await fetch(`http://${serverIp}:3000/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
         Alert.alert('Success', data.message);
-        navigation.navigate('Home'); 
+        navigation.navigate('Home');
       } else {
         Alert.alert('Error', data.message);
       }
     } catch (error) {
-      Alert.alert('Error', 'Unable to connect to the server. Please try again later.');
+      Alert.alert('Error', 'Unable to connect to the server.');
     }
   };
 
@@ -56,24 +62,7 @@ export default function SignInScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-  },
+  container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#fff' },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  input: { height: 50, borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 10, marginBottom: 15 },
 });
